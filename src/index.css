@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Professional Video Proctoring System Design - Dark monitoring theme with status indicators */
+
+@layer base {
+  :root {
+    --background: 215 28% 8%;
+    --foreground: 210 40% 98%;
+
+    --card: 215 25% 10%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 215 25% 10%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 90% 55%;
+    --primary-foreground: 215 28% 8%;
+
+    --secondary: 215 25% 15%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 215 25% 15%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 210 90% 55%;
+    --accent-foreground: 215 28% 8%;
+
+    --destructive: 0 85% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 215 25% 18%;
+    --input: 215 25% 18%;
+    --ring: 210 90% 55%;
+
+    --radius: 0.75rem;
+
+    /* Proctoring Status Colors */
+    --status-safe: 142 76% 36%;
+    --status-warning: 48 96% 53%;
+    --status-danger: 0 85% 60%;
+    --status-monitoring: 210 90% 55%;
+
+    /* Monitoring Interface */
+    --monitor-bg: 215 30% 6%;
+    --monitor-panel: 215 25% 12%;
+    --monitor-border: 215 25% 20%;
+
+    /* Detection Overlays */
+    --detection-face: 142 76% 36%;
+    --detection-violation: 0 85% 60%;
+    --detection-warning: 48 96% 53%;
+
+    /* Gradients */
+    --gradient-monitor: linear-gradient(135deg, hsl(var(--monitor-bg)), hsl(var(--monitor-panel)));
+    --gradient-alert: linear-gradient(135deg, hsl(var(--status-danger) / 0.1), hsl(var(--status-danger) / 0.05));
+    --gradient-safe: linear-gradient(135deg, hsl(var(--status-safe) / 0.1), hsl(var(--status-safe) / 0.05)));
+
+    /* Shadows */
+    --shadow-monitor: 0 8px 32px -4px hsl(215 30% 4% / 0.8);
+    --shadow-alert: 0 4px 20px hsl(var(--status-danger) / 0.3);
+    --shadow-glow: 0 0 40px hsl(var(--primary) / 0.15);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .light {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 210 90% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    /* Light mode overrides for monitoring */
+    --monitor-bg: 210 40% 96%;
+    --monitor-panel: 0 0% 100%;
+    --monitor-border: 214.3 31.8% 91.4%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
