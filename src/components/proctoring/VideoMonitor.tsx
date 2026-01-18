@@ -2,6 +2,16 @@ import { useEffect, useState, useCallback } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+
+// Debug flag to control console logging
+const DEBUG_ENABLED = false;
+
+// Utility function for conditional logging
+const debugLog = (type: "log" | "warn" | "error", ...args: unknown[]) => {
+  if (DEBUG_ENABLED) {
+    console[type](...args);
+  }
+};
 import { useVideoCapture } from "@/hooks/useVideoCapture";
 import { useDetection } from "@/hooks/useDetection";
 import { DetectionResult } from "@/types/proctoring";
@@ -64,7 +74,7 @@ export const VideoMonitor = ({
         const { apiService } = await import("@/services/api");
         await apiService.uploadVideo(file, sessionId);
       } catch (e) {
-        console.error("Video upload failed:", e);
+        debugLog("error", "Video upload failed:", e);
       }
     };
     upload();
@@ -100,13 +110,21 @@ export const VideoMonitor = ({
         const frame = captureFrame();
         if (frame) {
           try {
+            debugLog("log", "[VideoMonitor] Capturing frame for detection");
             const result = await detectFrame(frame);
+            debugLog(
+              "log",
+              "[VideoMonitor] Detection result:",
+              JSON.stringify(result)
+            );
             onDetectionResult(result);
           } catch (error) {
-            console.error("Detection failed:", error);
+            debugLog("error", "Detection failed:", error);
           }
+        } else {
+          debugLog("warn", "[VideoMonitor] Failed to capture frame");
         }
-      }, 1000); // Detect every second
+      }, 500); // Detect every 500ms for more responsive object detection
 
       setDetectionInterval(interval);
     }

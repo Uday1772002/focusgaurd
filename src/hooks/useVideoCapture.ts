@@ -1,5 +1,15 @@
 import { useRef, useCallback, useEffect, useState } from "react";
 
+// Debug flag to control console logging
+const DEBUG_ENABLED = false;
+
+// Utility function for conditional logging
+const debugLog = (type: "log" | "warn" | "error", ...args: unknown[]) => {
+  if (DEBUG_ENABLED) {
+    console[type](...args);
+  }
+};
+
 export const useVideoCapture = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -10,7 +20,19 @@ export const useVideoCapture = () => {
   const [error, setError] = useState<string | null>(null);
   const [recordedVideoUrl, setRecordedVideoUrl] = useState<string | null>(null);
 
+  // Define stopRecording before it's used in other functions
+  const stopRecording = useCallback(() => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      mediaRecorderRef.current = null;
+      setIsRecording(false);
+    }
+  }, [isRecording]);
+
   const startCapture = useCallback(async () => {
+    // Clear any previous errors when attempting to start capture
+    setError(null);
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
@@ -25,11 +47,10 @@ export const useVideoCapture = () => {
         videoRef.current.srcObject = stream;
         streamRef.current = stream;
         setIsStreaming(true);
-        setError(null);
       }
     } catch (err) {
       setError("Failed to access camera. Please check permissions.");
-      console.error("Error accessing camera:", err);
+      debugLog("error", "Error accessing camera:", err);
     }
   }, []);
 
@@ -43,16 +64,33 @@ export const useVideoCapture = () => {
     }
     setIsStreaming(false);
     stopRecording();
-  }, []);
+  }, [stopRecording]);
 
   const startRecording = useCallback(() => {
     if (!streamRef.current || isRecording) return;
 
     try {
       recordedChunksRef.current = [];
-      const mediaRecorder = new MediaRecorder(streamRef.current, {
-        mimeType: "video/webm;codecs=vp9",
-      });
+
+      // Check browser compatibility for various codecs
+      let options = {};
+      const mimeTypes = [
+        "video/webm;codecs=vp9",
+        "video/webm;codecs=vp8",
+        "video/webm",
+        "video/mp4",
+      ];
+
+      // Find the first supported MIME type
+      for (const mimeType of mimeTypes) {
+        if (MediaRecorder.isTypeSupported(mimeType)) {
+          options = { mimeType };
+          debugLog("log", `Using supported recording format: ${mimeType}`);
+          break;
+        }
+      }
+
+      const mediaRecorder = new MediaRecorder(streamRef.current, options);
 
       mediaRecorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
@@ -72,16 +110,8 @@ export const useVideoCapture = () => {
       mediaRecorder.start(1000); // Record in 1-second chunks
       setIsRecording(true);
     } catch (error) {
-      console.error("Error starting recording:", error);
+      debugLog("error", "Error starting recording:", error);
       setError("Failed to start recording");
-    }
-  }, [isRecording]);
-
-  const stopRecording = useCallback(() => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
-      mediaRecorderRef.current = null;
-      setIsRecording(false);
     }
   }, [isRecording]);
 

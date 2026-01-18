@@ -184,8 +184,21 @@ export const ProctoringDashboard = () => {
             break;
           case "book":
           case "paper":
+          case "notes":
             addEvent("notes_detected", "Books or notes detected", "medium");
             addAlert("notes_detected", "Books or notes detected", "medium");
+            break;
+          case "medicine":
+            addEvent(
+              "device_detected",
+              "Medicine bottle/container detected",
+              "high"
+            );
+            addAlert(
+              "device_detected",
+              "Medicine bottle/container detected",
+              "high"
+            );
             break;
           default:
             addEvent(
